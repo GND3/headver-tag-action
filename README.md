@@ -12,7 +12,7 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 
 ## Inputs
 
-- `api-name` (optional): API name prefix for tag separation. When provided, tags will be created as `{api-name}-v{version}` instead of `v{version}`.
+- `identifier` (optional): Custom identifier prefix for tag separation. When provided, tags will be created as `{identifier}-v{version}` instead of `v{version}`.
 
 ## Outputs
 
@@ -24,7 +24,7 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 ```yaml
 - name: Generate HeadVer version and tag
   id: headver
-  uses: GND3/headver-tag-action@v2
+  uses: GND3/headver-tag-action@v3
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,13 +32,13 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
   run: echo "Generated version: ${{ steps.headver.outputs.version }}"
 ```
 
-### Multi-Project Usage (with API name)
+### Multi-Project Usage (with custom identifier)
 ```yaml
 - name: Generate HeadVer version and tag for olym-api
   id: headver
-  uses: GND3/headver-tag-action@v2
+  uses: GND3/headver-tag-action@v3
   with:
-    api-name: 'olym-api'
+    identifier: 'olym-api'
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -48,9 +48,9 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 
 ## Tag Examples
 
-- **Without api-name**: `v0.2532.1`, `v0.2532.2`, etc.
-- **With api-name "olym-api"**: `olym-api-v0.2532.1`, `olym-api-v0.2532.2`, etc.
-- **With api-name "olym-admin-api"**: `olym-admin-api-v0.2532.1`, etc.
+- **Without identifier**: `v0.2532.1`, `v0.2532.2`, etc.
+- **With identifier "olym-api"**: `olym-api-v0.2532.1`, `olym-api-v0.2532.2`, etc.
+- **With identifier "olym-admin-api"**: `olym-admin-api-v0.2532.1`, etc.
 
 ## Requirements
 
@@ -70,7 +70,7 @@ steps:
       
   - name: Generate version
     id: headver
-    uses: GND3/headver-tag-action@v2
+    uses: GND3/headver-tag-action@v3
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -87,11 +87,11 @@ steps:
       fetch-depth: 0
       fetch-tags: true
       
-  - name: Generate version for API project
+  - name: Generate version for project
     id: headver
-    uses: GND3/headver-tag-action@v2
+    uses: GND3/headver-tag-action@v3
     with:
-      api-name: ${{ env.API_NAME }}  # e.g., "olym-api" or "olym-admin-api"
+      identifier: ${{ env.CUSTOM_IDENTIFIER }}  # e.g., "olym-api" or "olym-admin-api"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       

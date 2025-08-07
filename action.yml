@@ -1,8 +1,8 @@
 name: 'HeadVer Tag Action'
 description: 'Generate semantic version using HeadVer format and create git tag'
 inputs:
-  api-name:
-    description: 'Optional API name prefix for tag (e.g., "olym-api" results in "olym-api-v0.2532.1")'
+  identifier:
+    description: 'Optional custom identifier prefix for tag (e.g., "olym-api" results in "olym-api-v0.2532.1")'
     required: false
     default: ''
 outputs:
@@ -20,10 +20,10 @@ runs:
         HEAD=0
         YEARWEEK=$(date +%y)$(date +%V)
         
-        # API name이 제공되면 태그 prefix에 포함
-        if [[ -n "${{ inputs.api-name }}" ]]; then
-          TAG_PREFIX="${{ inputs.api-name }}-v"
-          echo "[DEBUG] API Name: ${{ inputs.api-name }}"
+        # Custom identifier가 제공되면 태그 prefix에 포함
+        if [[ -n "${{ inputs.identifier }}" ]]; then
+          TAG_PREFIX="${{ inputs.identifier }}-v"
+          echo "[DEBUG] Custom Identifier: ${{ inputs.identifier }}"
         else
           TAG_PREFIX="v"
         fi
@@ -49,5 +49,5 @@ runs:
     - name: Create and push custom tag
       uses: mathieudutour/github-tag-action@v6.1
       with:
-        custom_tag: ${{ inputs.api-name != '' && format('{0}-v{1}', inputs.api-name, steps.headver.outputs.version) || format('v{0}', steps.headver.outputs.version) }}
+        custom_tag: ${{ inputs.identifier != '' && format('{0}-v{1}', inputs.identifier, steps.headver.outputs.version) || format('v{0}', steps.headver.outputs.version) }}
         github_token: ${{ env.GITHUB_TOKEN }}
