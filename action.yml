@@ -9,6 +9,9 @@ outputs:
   version:
     description: 'Generated version in HeadVer format'
     value: ${{ steps.headver.outputs.version }}
+  tag:
+    description: 'Generated full tag name'
+    value: ${{ steps.headver.outputs.tag }}
 runs:
   using: "composite"
   steps:
@@ -41,13 +44,16 @@ runs:
           BUILD=$((LAST_BUILD + 1))
         fi
         VERSION="$HEAD.$YEARWEEK.$BUILD"
+        FINAL_TAG="${TAG_PREFIX}${VERSION}"
         echo "[DEBUG] 최종 생성될 버전: $VERSION"
+        echo "[DEBUG] 최종 생성될 태그: $FINAL_TAG"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_ENV
+        echo "tag=$FINAL_TAG" >> $GITHUB_OUTPUT
         echo "version=$VERSION"
     
     - name: Create and push custom tag
       uses: mathieudutour/github-tag-action@v6.1
       with:
-        custom_tag: ${{ inputs.identifier != '' && format('{0}-v{1}', inputs.identifier, steps.headver.outputs.version) || format('v{0}', steps.headver.outputs.version) }}
+        custom_tag: ${{ steps.headver.outputs.tag }}
         github_token: ${{ env.GITHUB_TOKEN }}
