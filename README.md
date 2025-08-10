@@ -12,7 +12,7 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 
 ## Inputs
 
-- `identifier` (optional): Custom identifier prefix for tag separation. When provided, tags will be created as `{identifier}-v{version}` instead of `v{version}`.
+- `identifier` (optional): Custom identifier prefix for tag separation. When provided, tags will be created as `{identifier}-{version}` instead of `v{version}`.
 
 ## Outputs
 
@@ -49,8 +49,8 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 ## Tag Examples
 
 - **Without identifier**: `v0.2532.1`, `v0.2532.2`, etc.
-- **With identifier "olym-api"**: `olym-api-v0.2532.1`, `olym-api-v0.2532.2`, etc.
-- **With identifier "olym-admin-api"**: `olym-admin-api-v0.2532.1`, etc.
+- **With identifier "olym-api"**: `olym-api-0.2532.1`, `olym-api-0.2532.2`, etc.
+- **With identifier "olym-admin-api"**: `olym-admin-api-0.2532.1`, etc.
 
 ## Requirements
 
