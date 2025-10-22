@@ -14,9 +14,20 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 
 - `identifier` (optional): Custom identifier prefix for tag separation. When provided, tags will be created as `{identifier}-{version}` instead of `v{version}`.
 
+## Release Notes
+
+This action automatically generates release notes by collecting commit messages between the previous tag and the current tag. The release notes include:
+
+- Commit messages from the previous tag to the current HEAD
+- Merged commits are excluded from the release notes
+- If no previous tag exists, all commit messages are included
+- Release notes are formatted in Markdown with bullet points
+
 ## Outputs
 
 - `version`: Generated version in HeadVer format (e.g., `0.2532.1`)
+- `tag`: Generated full tag name (e.g., `v0.2532.1` or `olym-api-0.2532.1`)
+- `release_notes`: Release notes generated from commit messages between previous and current tag
 
 ## Usage
 
@@ -30,6 +41,9 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 
 - name: Use generated version
   run: echo "Generated version: ${{ steps.headver.outputs.version }}"
+
+- name: Use release notes
+  run: echo "Release notes: ${{ steps.headver.outputs.release_notes }}"
 ```
 
 ### Multi-Project Usage (with custom identifier)
@@ -44,6 +58,9 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 
 - name: Use generated version
   run: echo "Generated version: ${{ steps.headver.outputs.version }}"
+
+- name: Use release notes
+  run: echo "Release notes: ${{ steps.headver.outputs.release_notes }}"
 ```
 
 ## Tag Examples
