@@ -13,6 +13,7 @@ This action generates version numbers in the HeadVer format (`0.YYWW.BUILD`) whe
 ## Inputs
 
 - `identifier` (optional): Custom identifier prefix for tag separation. When provided, tags will be created as `{identifier}-{version}` instead of `v{version}`.
+- `dry-run` (optional, default: `false`): If `true`, calculates version and tag without actually creating/pushing the tag. Useful for testing or previewing what version would be generated.
 
 ## Release Notes
 
@@ -111,7 +112,28 @@ steps:
       identifier: ${{ env.CUSTOM_IDENTIFIER }}  # e.g., "olym-api" or "olym-admin-api"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
   - name: Build with version
     run: ./gradlew build -Pversion=${{ steps.headver.outputs.version }}
+```
+
+### Dry Run (Preview Version Without Creating Tag)
+```yaml
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+      fetch-tags: true
+
+  - name: Preview version (dry run)
+    id: headver
+    uses: GND3/headver-tag-action@v3
+    with:
+      dry-run: 'true'
+
+  - name: Show what would be created
+    run: |
+      echo "Would create version: ${{ steps.headver.outputs.version }}"
+      echo "Would create tag: ${{ steps.headver.outputs.tag }}"
 ```
