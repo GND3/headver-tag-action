@@ -5,6 +5,10 @@ inputs:
     description: 'Optional custom identifier prefix for tag (e.g., "olym-api" results in "olym-api-0.2532.1")'
     required: false
     default: ''
+  dry-run:
+    description: 'If true, calculate version and tag without actually creating/pushing the tag'
+    required: false
+    default: 'false'
 outputs:
   version:
     description: 'Generated version in HeadVer format'
@@ -104,8 +108,22 @@ runs:
         echo "version=$VERSION"
     
     - name: Create and push custom tag
+      if: ${{ inputs.dry-run != 'true' }}
       uses: mathieudutour/github-tag-action@v6.1
       with:
         custom_tag: ${{ steps.headver.outputs.tag }}
         tag_prefix: ""
         github_token: ${{ env.GITHUB_TOKEN }}
+
+    - name: Dry run summary
+      if: ${{ inputs.dry-run == 'true' }}
+      shell: bash
+      run: |
+        echo "::notice::🏃 Dry run mode - tag was NOT created"
+        echo "::notice::📦 Version: ${{ steps.headver.outputs.version }}"
+        echo "::notice::🏷️ Tag: ${{ steps.headver.outputs.tag }}"
+        echo ""
+        echo "=== Dry Run Summary ==="
+        echo "Version: ${{ steps.headver.outputs.version }}"
+        echo "Tag: ${{ steps.headver.outputs.tag }}"
+        echo "This tag would be created and pushed if dry-run was disabled."
